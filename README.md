@@ -2,7 +2,7 @@
 
 This repository contains simple examples and snippets to understand ``Array.reduce()``
 
-## [Reduce Introduction]("/1.reduce-intro.js")
+## Reduce Introduction
 
 ```
 var data = [100,200,300];
