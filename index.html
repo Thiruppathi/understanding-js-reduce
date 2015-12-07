@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Understanding-js-reduce by Thiruppathi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Understanding-js-reduce</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/Thiruppathi/understanding-js-reduce" class="btn">View on GitHub</a>
+      <a href="https://github.com/Thiruppathi/understanding-js-reduce/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Thiruppathi/understanding-js-reduce/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="understand-arrayreduce" class="anchor" href="#understand-arrayreduce" aria-hidden="true"><span class="octicon octicon-link"></span></a>Understand <code>Array.reduce()</code>
+</h1>
+
+<p>This repository contains simple examples and snippets to understand <code>Array.reduce()</code></p>
+
+<h2>
+<a id="reduce-introduction" class="anchor" href="#reduce-introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reduce Introduction</h2>
+
+<pre><code>var data = [100,200,300];
+
+var reducer = function(accumulator, item) {
+  return accumulator + item;
+};
+
+var initialValue = 0;
+
+var total = data.reduce(reducer, initialValue);
+
+console.log('Sum of the array', data, 'is: ', total);
+</code></pre>
+
+<h2>
+<a id="array-to-object" class="anchor" href="#array-to-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Array To Object</h2>
+
+<pre><code>var votes = [
+  'Rajini',
+  'Rajini',
+  'Kamal',
+  'Vijay',
+  'Vikram',
+  'PowerStar',
+  'Kamal',
+  'Kamal',
+  'Cocunut Sreenivasan',
+  'Rajini',
+  'JK Riteesh',
+  'Mike Mohan',
+  'Rajini',
+  'Rajini',
+  'Rajini',
+  'Mike Mohan'
+];
+
+
+var reducer = function(result, actor) {
+  if (!(result[actor])) {
+    result[actor] = 1;
+  } else {
+    result[actor]++;
+  }
+  return result;
+};
+
+
+var initialValue = {};
+
+var pollResult = votes.reduce(reducer, initialValue);
+
+console.log('Nadigar Sangam Result', pollResult);
+
+</code></pre>
+
+<h2>
+<a id="common-patterns" class="anchor" href="#common-patterns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common Patterns</h2>
+
+<pre><code>/* Common Patterns when using Map, Reduce, filter
+Using reduce can save execution time */
+
+var bigData = [];
+for (var i = 0; i &lt; 1000000; i++) {
+  bigData[i] = i;
+}
+
+console.time('BigData Filter');
+var filterBigData = bigData.filter(function(i) {
+  return (i % 2 === 0);
+}).map(function(j) {
+  return j * 2;
+});
+console.timeEnd('BigData Filter');
+
+
+console.time('BigData Reduce');
+var reducer = function(accumulator, item) {
+  if (item % 2 === 0) {
+    accumulator.push(item * 2);
+  }
+  return accumulator;
+};
+
+var reduceBigData = bigData.reduce(reducer, []);
+console.timeEnd('BigData Reduce');
+
+</code></pre>
+
+<h2>
+<a id="additional-reducer-arguments" class="anchor" href="#additional-reducer-arguments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additional Reducer Arguments</h2>
+
+<pre><code>/** Additional Args of reduce
+ * 1. accumulator
+ * 2. item
+ * 3. index
+ * 4. array
+ */
+
+var reducer = function(accumulator, item, index, array) {
+  var intermediaryValue = accumulator + item;
+  return intermediaryValue;
+}
+
+var data = [1, 2, 3, 4, 5, 6, 7, 3, 3, 5, 2, 3, 5];
+
+console.time('reducer');
+var sum = data.reduce(reducer, 0);
+console.timeEnd('reducer');
+console.log('Sum:', sum, 'Mean:', sum / data.length);
+
+var reducer2 = function(accumulator, item, index, array) {
+  var intermediaryValue = accumulator + item;
+  if (index === (array.length - 1)) {
+    return intermediaryValue / array.length;
+  }
+  return intermediaryValue;
+}
+console.time('reducer Effective');
+
+var mean = data.reduce(reducer2, 0);
+console.timeEnd('reducer Effective');
+console.log('Sum:', sum, 'Mean:', mean);
+
+</code></pre>
+
+<h2>
+<a id="common-mistakes" class="anchor" href="#common-mistakes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common Mistakes</h2>
+
+<pre><code>// 1. Always pass an initialValue
+
+// 2. Always return the accumulator
+
+var data = [100, 200, 300];
+
+var reducer = function(accumulator, item) {
+  console.log('typeof accumulator', typeof accumulator);
+  return accumulator + item;
+};
+
+var initialValue = 0;
+
+var total = data.reduce(reducer, initialValue);
+
+console.log('Sum of the array', data, 'is: ', total);
+
+
+console.log('---------------------------------');
+
+
+var votes = [
+  'Rajini',
+  'Rajini',
+  'Kamal',
+  'Vijay',
+  'Vikram',
+  'PowerStar',
+  'Kamal',
+  'Mike Mohan'
+];
+
+
+var voteReducer = function(result, actor) {
+  if (!(result[actor])) {
+    result[actor] = 1;
+  } else {
+    result[actor]++;
+  }
+  console.log('typeof accumulator', typeof result);
+
+  return result;
+};
+
+
+var initialValue = {};
+
+var pollResult = votes.reduce(voteReducer, initialValue);
+
+console.log('Nadigar Sangam Result', pollResult);
+
+</code></pre>
+
+<h2>
+<a id="flatten---flatmap---reduce-right" class="anchor" href="#flatten---flatmap---reduce-right" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flatten - FlatMap - Reduce Right</h2>
+
+<pre><code>var data = [1, 2, 3, 4, "5"];
+
+var reducer = function(accumulator, item) {
+  return accumulator + item;
+};
+
+var initialValue = 0;
+
+var total = data.reduceRight(reducer, initialValue);
+
+console.log('Sum of the array', data, 'is: ', total);
+
+</code></pre>
+
+<h2>
+<a id="array-prototype-reduce-by-example" class="anchor" href="#array-prototype-reduce-by-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Array Prototype Reduce by Example</h2>
+
+<pre><code>// Try ES6 Examples
+
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Thiruppathi/understanding-js-reduce">Understanding-js-reduce</a> is maintained by <a href="https://github.com/Thiruppathi">Thiruppathi</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
