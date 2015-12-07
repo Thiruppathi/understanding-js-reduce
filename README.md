@@ -188,7 +188,7 @@ console.log('Nadigar Sangam Result', pollResult);
 ## Flatten - FlatMap - Reduce Right
 
 ```
-var data = [1,2,3,4,"5"];
+var data = [1, 2, 3, 4, "5"];
 
 var reducer = function(accumulator, item) {
   return accumulator + item;
